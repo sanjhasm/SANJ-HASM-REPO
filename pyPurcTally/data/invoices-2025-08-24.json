@@ -53,5 +53,16 @@
     "source_file": "inv-HomeCenter.png",
     "created_at": "2025-08-24T17:16:40",
     "sent_to_tally": "No"
+  },
+  {
+    "id": "e3637c18-ad7d-4217-8cc2-9d77f568879c",
+    "supplier": "Flipkart Internet Private Limited",
+    "invoice_no": "FBF8026001648973",
+    "invoice_date": "15-05-2025",
+    "invoice_amount": "49.00",
+    "full_text": "Tax Invoice\nSold By: Flipkart Internet Private Limited ,\n\u2018Ship-from Address: Buildings Alyssa, Begonia & Clover, Embassy Tech Village, Outer Ring Road, Devarabeesanahalli Vilage,\nBengaluru, Bengaluru, Kamatako, IN - 560103, CIN: US1109K42012PTC066107\nGSTIN - 29AACCF0683K1ZD\n\nr |\n| Invoice Number # FBF8026001648973 |\n\nOrder ID: 0D434409718438669100 Billing Address\n\nOrder Date: 14-05-2025 Sanjay Ghelani\n5 Vijay Garden Lily CHS Ltd, 12/33, Off.\nInvoice Date: 15-05-2025 Ghodbunder Road, Kavesar, Thane,\n\nKewalaya Hospital,\nThane 400615 Maharashtra\nPhone: 110000000\n\nDes Qty Gross Discount Taxable IGST \u2014Totalz\nAmount & value = z\nSAC: 998599 Offer Handling Fee 1 49.00 0.00 41.53 747 49.00\n1. [IMEY/Serial No: 351635282594496 |\nlost: 18.0%\nTotal 1 49.00 0.00 41.53 7.47 49.00\nGrand Total = 49.00\n\nFlipkart Internet Private Limited\n\nwe\n\nAuthorized Signatory\n\n",
+    "source_file": "inv-Flipkart.png",
+    "created_at": "2025-08-24T18:14:12",
+    "sent_to_tally": "No"
   }
 ]
