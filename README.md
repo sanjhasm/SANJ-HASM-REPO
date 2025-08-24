@@ -1,4 +1,5 @@
-Git Commands:
+# Git Commands:
+------------------
 Looged in with my gmail
 Repository Name: SANJ-HASM-REPO
 Repository Link: https://github.com/sanjhasm/SANJ-HASM-REPO.git
