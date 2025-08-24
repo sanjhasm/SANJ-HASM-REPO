@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Scan Purchase Bills</h2>
+  <form id="uploadForm">
+    <input class="input" type="file" name="files" id="files" accept="image/*" multiple />
+    <div class="row" style="margin-top:12px">
+      <button class="btn primary" type="submit">Upload & OCR</button>
+    </div>
+  </form>
+  <div id="results"></div>
+</div>
+<script>
+const form = document.getElementById('uploadForm');
+const results = document.getElementById('results');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  results.innerHTML = '<p class="small">Processing...</p>';
+  const fd = new FormData();
+  const files = document.getElementById('files').files;
+  for (const f of files) fd.append('files', f);
+
+  const res = await fetch('/api/ocr', { method: 'POST', body: fd });
+  const data = await res.json();
+  results.innerHTML = '';
+
+  if (!Array.isArray(data.items)) { results.innerHTML = '<div class="flash bad">OCR failed.</div>'; return; }
+
+  data.items.forEach((item, idx) => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.style.marginTop = '12px';
+    div.innerHTML = `
+      <h3>Result ${idx+1}</h3>
+      <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div><label>Supplier</label><input class="input" value="${item.supplier||''}" data-k="supplier"></div>
+        <div><label>Invoice No</label><input class="input" value="${item.invoice_no||''}" data-k="invoice_no"></div>
+        <div><label>Invoice Date</label><input class="input" value="${item.invoice_date||''}" data-k="invoice_date"></div>
+        <div><label>Invoice Amount</label><input class="input" value="${item.invoice_amount||''}" data-k="invoice_amount"></div>
+      </div>
+      <label style="margin-top:8px;display:block">Full Text</label>
+      <textarea class="input" rows="6" data-k="full_text">${item.full_text||''}</textarea>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" data-action="confirm">Confirm</button>
+      </div>
+      <p class="small">Source: ${item.source_file||''}</p>
+    `;
+    div.querySelector('[data-action="confirm"]').addEventListener('click', async () => {
+      const payload = {};
+      div.querySelectorAll('[data-k]').forEach(inp => payload[inp.dataset.k] = inp.value);
+      payload['source_file'] = item.source_file || '';
+      const resp = await fetch('/api/confirm', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+      const out = await resp.json();
+      if (out.ok) {
+        div.insertAdjacentHTML('beforeend', '<div class="flash ok">Saved to JSON.</div>');
+      } else {
+        div.insertAdjacentHTML('beforeend', '<div class="flash bad">Save failed.</div>');
+      }
+    });
+    results.appendChild(div);
+  });
+});
+</script>
+{% endblock %}

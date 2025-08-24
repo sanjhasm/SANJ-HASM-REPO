@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Settings</h2>
+  <h3>Login Credentials</h3>
+  <form id="credsForm">
+    <div class="grid" style="grid-template-columns:1fr 1fr">
+      <div><label>Username</label><input class="input" name="username" value="{{ auth.username }}"></div>
+      <div><label>Password</label><input class="input" name="password" type="password" value="{{ auth.password }}"></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn primary" type="submit">Save</button></div>
+  </form>
+  <hr>
+  <h3>Default Regex</h3>
+  <form id="regexForm">
+    <label>Supplier</label><input class="input" name="supplier" value="{{ regex.supplier|e }}">
+    <label>Invoice No</label><input class="input" name="invno" value="{{ regex.invno|e }}">
+    <label>Invoice Date</label><input class="input" name="invdt" value="{{ regex.invdt|e }}">
+    <label>Invoice Amount</label><input class="input" name="invamt" value="{{ regex.invamt|e }}">
+    <div class="row" style="margin-top:12px"><button class="btn primary" type="submit">Save</button></div>
+  </form>
+  <hr>
+  <h3>Tally Config</h3>
+  <form id="tallyForm">
+    <label>Base URL</label><input class="input" name="base_url" value="{{ tally.base_url }}">
+    <label>Token</label><input class="input" name="token" value="{{ tally.token }}">
+    <div class="row" style="margin-top:12px"><button class="btn primary" type="submit">Save</button></div>
+  </form>
+  <hr>
+  <h3>Supplier Patterns (override)</h3>
+  <form id="supplierForm">
+    <label>Supplier Name</label><input class="input" name="supplier">
+    <label>Invoice No Pattern</label><input class="input" name="invno_pattern">
+    <label>Invoice Date Pattern</label><input class="input" name="invdt_pattern">
+    <label>Invoice Amount Pattern</label><input class="input" name="invamt_pattern">
+    <div class="row" style="margin-top:12px"><button class="btn" type="submit">Add/Update</button></div>
+  </form>
+  <p class="small">Existing patterns saved in data/supplier_patterns.json</p>
+</div>
+<script>
+async function postJSON(url, data){
+  const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data)});
+  return res.json();
+}
+document.getElementById('credsForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const out = await postJSON('/api/config', {auth:{username: fd.get('username'), password: fd.get('password')}});
+  alert(out.ok?'Saved':'Failed');
+});
+document.getElementById('regexForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const out = await postJSON('/api/config', {regex:{supplier: fd.get('supplier'), invno: fd.get('invno'), invdt: fd.get('invdt'), invamt: fd.get('invamt')}});
+  alert(out.ok?'Saved':'Failed');
+});
+document.getElementById('tallyForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const out = await postJSON('/api/config', {tally:{base_url: fd.get('base_url'), token: fd.get('token')}});
+  alert(out.ok?'Saved':'Failed');
+});
+document.getElementById('supplierForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const body = {
+    supplier: fd.get('supplier'),
+    invno_pattern: fd.get('invno_pattern'),
+    invdt_pattern: fd.get('invdt_pattern'),
+    invamt_pattern: fd.get('invamt_pattern'),
+  };
+  const out = await postJSON('/api/patterns', body);
+  alert(out.ok?'Saved':'Failed');
+});
+</script>
+{% endblock %}

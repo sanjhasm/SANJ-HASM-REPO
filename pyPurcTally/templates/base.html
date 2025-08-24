@@ -1,0 +1,25 @@
+{% macro nav(request) -%}
+<div class="nav">
+  <a href="/" class="{{ 'active' if request.url.path=='/' else '' }}">Home</a>
+  <a href="/activities" class="{{ 'active' if request.url.path.startswith('/activities') else '' }}">Activities</a>
+  <a href="/grid" class="{{ 'active' if request.url.path.startswith('/grid') else '' }}">Grid</a>
+  <a href="/settings" class="{{ 'active' if request.url.path.startswith('/settings') else '' }}">Settings</a>
+  <div style="flex:1"></div>
+  <a href="/logout">Logout</a>
+</div>
+{%- endmacro %}
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ title or 'FastAPI OCR' }}</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="container">
+    {% if request.session.get('user') %}{{ nav(request) }}{% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

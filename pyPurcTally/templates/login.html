@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width:480px;margin:40px auto">
+  <h2>Login</h2>
+  {% if error %}<div class="flash bad">{{ error }}</div>{% endif %}
+  <form method="post">
+    <label>Username</label>
+    <input class="input" name="username" required>
+    <label>Password</label>
+    <input class="input" type="password" name="password" required>
+    <div style="margin-top:16px" class="row">
+      <button class="btn primary" type="submit">Login</button>
+    </div>
+  </form>
+  <p class="small">Default: admin / admin123 (edit in data/config.json)</p>
+</div>
+{% endblock %}

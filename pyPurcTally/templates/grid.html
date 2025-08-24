@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card">
+  <h2>Grid</h2>
+  <div class="row">
+    <button id="refresh" class="btn">Refresh</button>
+    <button id="sendAll" class="btn primary">Send All to Tally</button>
+  </div>
+  <div id="msg"></div>
+  <table class="table" id="grid" style="margin-top:12px">
+    <thead><tr>
+      <th>Supplier</th><th>Invoice No</th><th>Date</th><th>Amount</th><th>Sent</th><th>File</th><th>Created</th>
+    </tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+<script>
+async function loadGrid(){
+  const res = await fetch('/api/grid');
+  const data = await res.json();
+  const tb = document.querySelector('#grid tbody');
+  tb.innerHTML = '';
+  (data.items || []).forEach(r => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${r.supplier||''}</td>
+      <td>${r.invoice_no||''}</td>
+      <td>${r.invoice_date||''}</td>
+      <td>${r.invoice_amount||''}</td>
+      <td><span class="badge ${r.sent_to_tally==='Yes'?'ok':'no'}">${r.sent_to_tally||'No'}</span></td>
+      <td>${r.source_file||''}</td>
+      <td>${r.created_at||''}</td>
+    `;
+    tb.appendChild(tr);
+  });
+}
+document.getElementById('refresh').onclick = loadGrid;
+document.getElementById('sendAll').onclick = async () => {
+  const res = await fetch('/api/tally/send-all', {method:'POST'});
+  const data = await res.json();
+  document.getElementById('msg').innerHTML = `<div class="flash ok">Sent: ${data.sent} | Failed: ${data.failed}</div>`;
+  loadGrid();
+};
+loadGrid();
+</script>
+{% endblock %}
