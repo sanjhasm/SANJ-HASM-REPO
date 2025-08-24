@@ -5,7 +5,7 @@ import cv2
 import pytesseract
 import re       # regular expr
 import json
-import os
+import os       # works with files, dir, etc
 
 TEMPLATE_FILE = "supplier_templates.json"
 def_supplier_pattern = r'(Sold\s*By:|Supplier|Vendor|From)[:\-]?\s*(.*)'
